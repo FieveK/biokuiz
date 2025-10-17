@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5">
+  <div class="text-center mb-4">
+    <h2 class="fw-bold text-success">📊 Laporan Kelas</h2>
+    <p class="text-muted">Statistik performa siswa berdasarkan hasil kuis</p>
+  </div>
+
+  <!-- Tombol Ekspor -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="text-success">📈 Grafik Rata-rata Skor Siswa</h5>
+    <a href="{{ url_for('export_scores') }}" class="btn btn-outline-success">
+      ⬇️ Ekspor Nilai (.csv)
+    </a>
+  </div>
+
+  <!-- Grafik -->
+  <div class="card shadow border-0 p-4 mb-4 report-card">
+    <canvas id="reportChart" height="120"></canvas>
+  </div>
+
+  <!-- Tabel Detail Nilai -->
+  <div class="card shadow border-0 p-4 report-card">
+    <h5 class="mb-3 text-success">📋 Detail Nilai Siswa</h5>
+    <table class="table table-hover align-middle">
+      <thead class="table-success">
+        <tr>
+          <th>No</th>
+          <th>Nama Siswa</th>
+          <th>Rata-rata Skor</th>
+          <th>Skor Tertinggi</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for data in report_data %}
+        <tr class="fade-in-row" style="animation-delay: {{ loop.index * 0.1 }}s;">
+          <td>{{ loop.index }}</td>
+          <td>{{ data.username }}</td>
+          <td><span class="badge bg-success">{{ data.avg_score }}%</span></td>
+          <td><span class="badge bg-warning text-dark">{{ data.best_score }}%</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const ctx = document.getElementById('reportChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: {{ labels | safe }},
+      datasets: [{
+        label: 'Rata-rata Skor (%)',
+        data: {{ data_scores | safe }},
+        borderWidth: 1,
+        backgroundColor: '#4CAF50'
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            color: '{{ "white" if session.get("dark_mode") else "black" }}'
+          }
+        },
+        x: {
+          ticks: {
+            color: '{{ "white" if session.get("dark_mode") else "black" }}'
+          }
+        }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: { enabled: true }
+      }
+    }
+  });
+</script>
+{% endblock %}

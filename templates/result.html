@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>Hasil Kuis</h2>
+  <p>Nilai: <strong>{{ score }}</strong> ({{ correct }} / {{ total }})</p>
+  <p><a href="{{ url_for('dashboard') }}">Kembali ke Dashboard</a> | <a href="{{ url_for('leaderboard') }}">Lihat Leaderboard</a></p>
+{% endblock %}

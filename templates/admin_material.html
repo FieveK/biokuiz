@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="text-success mb-4">📘 Kelola Materi</h2>
+<a href="{{ url_for('admin_material_add') }}" class="btn btn-success mb-3">+ Tambah Materi</a>
+
+<table class="table table-striped align-middle shadow-sm">
+  <thead class="table-success">
+    <tr>
+      <th>ID</th>
+      <th>Judul</th>
+      <th>Gambar</th>
+      <th>Aksi</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for m in materials %}
+    <tr>
+      <td>{{ m.id }}</td>
+      <td>{{ m.title }}</td>
+      <td>{% if m.image_filename %}<img src="{{ url_for('static', filename='images/' + m.image_filename) }}" width="80">{% endif %}</td>
+      <td>
+        <a href="{{ url_for('admin_material_edit', id=m.id) }}" class="btn btn-sm btn-primary">Edit</a>
+        <a href="{{ url_for('admin_material_delete', id=m.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Hapus materi ini?')">Hapus</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

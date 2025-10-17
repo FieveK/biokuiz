@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-md-4">
+    <div class="card text-center shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title text-success">📈 Rata-rata Nilai</h5>
+        <h2 class="fw-bold text-primary">{{ avg_score }}</h2>
+        <p class="text-muted">Dari {{ scores|length }} kuis</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card text-center shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title text-success">🏆 Skor Tertinggi</h5>
+        <h2 class="fw-bold text-warning">{{ best_score }}</h2>
+        <p class="text-muted">Capaian terbaikmu!</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card text-center shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title text-success">📅 Skor Terakhir</h5>
+        {% if last_score %}
+          <h2 class="fw-bold">{{ last_score.score }}</h2>
+          <p class="text-muted">{{ last_score.taken_at.strftime("%d %b %Y %H:%M") }}</p>
+        {% else %}
+          <p class="text-muted">Belum ada kuis diikuti.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="my-4">
+
+<div class="card shadow-sm">
+  <div class="card-body">
+    <h4 class="card-title text-success mb-3">📊 Grafik Perkembangan Nilai</h4>
+    {% if scores %}
+      <canvas id="scoreChart" height="100"></canvas>
+    {% else %}
+      <p class="text-muted">Belum ada data kuis untuk ditampilkan.</p>
+    {% endif %}
+  </div>
+</div>
+
+<hr class="my-4">
+
+<div class="card shadow-sm">
+  <div class="card-body">
+    <h4 class="text-success">🕒 Riwayat Skor</h4>
+    {% if scores %}
+      <ul class="list-group list-group-flush">
+        {% for s in scores %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            {{ s.taken_at.strftime("%d %b %Y %H:%M") }}
+            <span class="badge bg-success rounded-pill">{{ s.score }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="text-muted">Belum ada data skor.</p>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Script Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const labels = {{ labels|tojson }};
+  const data = {{ data_scores|tojson }};
+  const ctx = document.getElementById('scoreChart');
+
+  if (labels.length > 0) {
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Nilai Kuis',
+          data: data,
+          fill: true,
+          borderColor: '#4CAF50',
+          backgroundColor: 'rgba(76, 175, 80, 0.2)',
+          tension: 0.3,
+          pointBackgroundColor: '#388e3c'
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100,
+            ticks: {
+              color: '#555'
+            }
+          },
+          x: {
+            ticks: { color: '#555' }
+          }
+        },
+        plugins: {
+          legend: { display: false },
+          title: {
+            display: false
+          }
+        }
+      }
+    });
+  }
+</script>
+{% endblock %}

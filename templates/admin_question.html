@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="text-success mb-4">🧠 Kelola Soal Kuis</h2>
+<a href="{{ url_for('admin_question_add') }}" class="btn btn-success mb-3">+ Tambah Soal</a>
+
+<table class="table table-striped align-middle shadow-sm">
+  <thead class="table-success">
+    <tr>
+      <th>ID</th>
+      <th>Teks Soal</th>
+      <th>Tipe</th>
+      <th>Jawaban Benar</th>
+      <th>Aksi</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for q in questions %}
+    <tr>
+      <td>{{ q.id }}</td>
+      <td>{{ q.text }}</td>
+      <td>{{ q.qtype }}</td>
+      <td>{{ q.correct }}</td>
+      <td>
+        <a href="{{ url_for('admin_question_edit', id=q.id) }}" class="btn btn-sm btn-primary">Edit</a>
+        <a href="{{ url_for('admin_question_delete', id=q.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Hapus soal ini?')">Hapus</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

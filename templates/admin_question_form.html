@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="text-success mb-4">
+  {% if mode == 'add' %}➕ Tambah Soal{% else %}✏️ Edit Soal{% endif %}
+</h2>
+
+<form method="POST">
+  <div class="mb-3">
+    <label class="form-label">Teks Soal</label>
+    <textarea class="form-control" name="text" rows="4" required>{{ question.text if question else '' }}</textarea>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Tipe Soal</label>
+    <select name="qtype" class="form-select">
+      <option value="mcq" {% if question and question.qtype == 'mcq' %}selected{% endif %}>Pilihan Ganda</option>
+      <option value="tf" {% if question and question.qtype == 'tf' %}selected{% endif %}>Benar/Salah</option>
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Pilihan Jawaban (untuk MCQ)</label>
+    <textarea class="form-control" name="choices" rows="3" placeholder="Format: A||Pilihan A;;B||Pilihan B;;C||Pilihan C">{{ question.choices if question else '' }}</textarea>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Jawaban Benar</label>
+    <input type="text" class="form-control" name="correct" value="{{ question.correct if question else '' }}" required>
+  </div>
+
+  <button type="submit" class="btn btn-success">Simpan</button>
+  <a href="{{ url_for('admin_question') }}" class="btn btn-secondary">Kembali</a>
+</form>
+{% endblock %}

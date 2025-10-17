@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5">
+  <div class="text-center mb-4">
+    <h2 class="fw-bold text-success">👤 Profil {{ user.role.capitalize() }}</h2>
+    <p class="text-muted">Kelola akun dan lihat pencapaian kamu di Biokuiz!</p>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-lg border-0 profile-card p-4">
+        <h4 class="text-center mb-3 text-primary">{{ user.username }}</h4>
+            <p class="text-center mb-4">
+                <span class="badge bg-success">{{ user.role.capitalize() }}</span><br>
+                <span class="badge bg-info text-dark">🏅 Level: {{ level }}</span><br>
+                <small class="text-muted">Bergabung sejak {{ user.created_at.strftime('%d %B %Y') }}</small>
+            </p>
+
+
+        <hr>
+        <h5 class="text-success">📊 Statistik</h5>
+        <ul class="list-group mb-4">
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            Total Kuis
+            <span class="badge bg-primary">{{ total_quiz }}</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            Rata-rata Skor
+            <span class="badge bg-success">{{ avg_score }}%</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            Skor Tertinggi
+            <span class="badge bg-warning text-dark">{{ best_score }}%</span>
+          </li>
+        </ul>
+
+        <h5 class="text-success">🔑 Ganti Password</h5>
+        <form method="POST">
+          <div class="mb-3">
+            <input type="password" class="form-control" name="new_password" placeholder="Password baru..." required>
+          </div>
+          <button type="submit" class="btn btn-success w-100">Simpan Password</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

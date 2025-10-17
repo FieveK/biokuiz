@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5">
+  <div class="text-center mb-4">
+    <h2 class="fw-bold text-success">
+      🏆 Papan Peringkat Biokuiz
+    </h2>
+    <p class="text-muted">Lihat siapa yang mendapatkan skor terbaik dan raih level tertinggi!</p>
+  </div>
+
+  <div class="card shadow border-0 leaderboard-card">
+    <div class="card-body">
+      {% if results %}
+      <table class="table table-hover align-middle leaderboard-table">
+        <thead class="table-success">
+          <tr>
+            <th scope="col" style="width: 80px;">Peringkat</th>
+            <th scope="col">Nama Pengguna</th>
+            <th scope="col">Skor Terbaik</th>
+            <th scope="col">Level</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for username, best_score in results %}
+          {% set level = "Ahli" if best_score >= 80 else "Cerdas" if best_score >= 60 else "Pemula" %}
+          <tr class="fade-in-row" style="animation-delay: {{ loop.index * 0.1 }}s;">
+            <td>
+              {% if loop.index == 1 %}
+                🥇
+              {% elif loop.index == 2 %}
+                🥈
+              {% elif loop.index == 3 %}
+                🥉
+              {% else %}
+                {{ loop.index }}
+              {% endif %}
+            </td>
+            <td><strong>{{ username }}</strong></td>
+            <td>
+              <span class="badge bg-success fs-6">{{ best_score }}%</span>
+            </td>
+            <td>
+              {% if level == "Ahli" %}
+                <span class="badge bg-warning text-dark">🏅 {{ level }}</span>
+              {% elif level == "Cerdas" %}
+                <span class="badge bg-info text-dark">🎓 {{ level }}</span>
+              {% else %}
+                <span class="badge bg-secondary">📘 {{ level }}</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p class="text-center text-muted">Belum ada data skor. Ayo jadi yang pertama!</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="text-center mt-4">
+    <a href="{{ url_for('quiz') }}" class="btn btn-success btn-lg">
+      🎯 Ikuti Kuis Lagi
+    </a>
+  </div>
+</div>
+{% endblock %}
